@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Landing Calcetines de Colores</title>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canva SDKs -->
+    <script src="/_sdk/element_sdk.js"></script>
+    <script src="/_sdk/data_sdk.js"></script>
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+    </style>
+    <script>
+      // Config por defecto para el Element SDK
+      const defaultConfig = {
+        // Colores (máx 5)
+        background_color: "#0f172a", // Fondo principal
+        surface_color: "#1e293b", // Tarjetas / bloques
+        text_color: "#f9fafb", // Texto
+        primary_action_color: "#e11d48", // Botón principal
+        secondary_action_color: "#22c55e", // Botones secundarios / enlaces
+
+        // Tipografía
+        font_family: "system-ui",
+        font_size: 16,
+
+        // Textos editables
+        hero_title: "Calcetines de colores que alegran tu día",
+        hero_subtitle:
+          "Suaves, cómodos y llenos de personalidad. Diseñados para quienes quieren destacar desde los pies.",
+        hero_cta_text: "Quiero mis calcetines",
+        features_title: "¿Por qué nuestros calcetines?",
+        footer_text:
+          "© 2025 Calcetines de Colores. Todos los derechos reservados.",
+      };
+
+      // Referencias a elementos (se rellenan al cargar el DOM)
+      let heroTitleEl,
+        heroSubtitleEl,
+        heroCtaBtn,
+        featuresTitleEl,
+        footerTextEl,
+        pageWrapper,
+        cardsWrapper,
+        mockFormTitleEl,
+        mockFormCtaEl,
+        navBrandEl,
+        navCtaEl,
+        badgesEls;
+
+      function applyConfigToUI(config) {
+        const cfg = { ...defaultConfig, ...config };
+
+        const baseFont = cfg.font_family || defaultConfig.font_family;
+        const baseSize = cfg.font_size || defaultConfig.font_size;
+        const fullFontStack = `${baseFont}, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+
+        // Colores
+        const bgColor = cfg.background_color;
+        const surfaceColor = cfg.surface_color;
+        const textColor = cfg.text_color;
+        const primaryColor = cfg.primary_action_color;
+        const secondaryColor = cfg.secondary_action_color;
+
+        // Fondo principal
+        if (pageWrapper) {
+          pageWrapper.style.backgroundColor = bgColor;
+          pageWrapper.style.color = textColor;
+        }
+
+        // Tarjetas/superficies
+        if (cardsWrapper) {
+          const cards = cardsWrapper.querySelectorAll(".sock-card");
+          cards.forEach((card) => {
+            card.style.backgroundColor = surfaceColor;
+            card.style.color = textColor;
+          });
+        }
+
+        const mockForm = document.getElementById("mock-form");
+        if (mockForm) {
+          mockForm.style.backgroundColor = surfaceColor;
+          mockForm.style.color = textColor;
+        }
+
+        const navBar = document.getElementById("nav-bar");
+        if (navBar) {
+          navBar.style.backgroundColor = surfaceColor;
+        }
+
+        // Botones primarios
+        const primaryButtons = document.querySelectorAll(".btn-primary");
+        primaryButtons.forEach((btn) => {
+          btn.style.backgroundColor = primaryColor;
+          btn.style.borderColor = primaryColor;
+          btn.style.color = "#f9fafb";
+        });
+
+        // Botones / enlaces secundarios
+        const secondaryButtons = document.querySelectorAll(".btn-secondary");
+        secondaryButtons.forEach((btn) => {
+          btn.style.color = secondaryColor;
+          btn.style.borderColor = secondaryColor;
+        });
+
+        // Textos: fuentes y tamaños proporcionales
+        if (heroTitleEl) {
+          heroTitleEl.textContent = cfg.hero_title || defaultConfig.hero_title;
+          heroTitleEl.style.fontFamily = fullFontStack;
+          heroTitleEl.style.fontSize = baseSize * 2.2 + "px";
+        }
+
+        if (heroSubtitleEl) {
+          heroSubtitleEl.textContent =
+            cfg.hero_subtitle || defaultConfig.hero_subtitle;
+          heroSubtitleEl.style.fontFamily = fullFontStack;
+          heroSubtitleEl.style.fontSize = baseSize * 1.05 + "px";
+        }
+
+        if (heroCtaBtn) {
+          heroCtaBtn.textContent =
+            cfg.hero_cta_text || defaultConfig.hero_cta_text;
+          heroCtaBtn.style.fontFamily = fullFontStack;
+          heroCtaBtn.style.fontSize = baseSize * 0.95 + "px";
+        }
+
+        if (featuresTitleEl) {
+          featuresTitleEl.textContent =
+            cfg.features_title || defaultConfig.features_title;
+          featuresTitleEl.style.fontFamily = fullFontStack;
+          featuresTitleEl.style.fontSize = baseSize * 1.4 + "px";
+        }
+
+        if (footerTextEl) {
+          footerTextEl.textContent =
+            cfg.footer_text || defaultConfig.footer_text;
+          footerTextEl.style.fontFamily = fullFontStack;
+          footerTextEl.style.fontSize = baseSize * 0.8 + "px";
+        }
+
+        if (mockFormTitleEl) {
+          mockFormTitleEl.style.fontFamily = fullFontStack;
+          mockFormTitleEl.style.fontSize = baseSize * 1.1 + "px";
+        }
+
+        if (mockFormCtaEl) {
+          mockFormCtaEl.style.fontFamily = fullFontStack;
+          mockFormCtaEl.style.fontSize = baseSize * 0.95 + "px";
+        }
+
+        if (navBrandEl) {
+          navBrandEl.style.fontFamily = fullFontStack;
+          navBrandEl.style.fontSize = baseSize * 1.1 + "px";
+        }
+
+        if (navCtaEl) {
+          navCtaEl.style.fontFamily = fullFontStack;
+          navCtaEl.style.fontSize = baseSize * 0.9 + "px";
+        }
+
+        if (badgesEls && badgesEls.length) {
+          badgesEls.forEach((badge) => {
+            badge.style.fontFamily = fullFontStack;
+            badge.style.fontSize = baseSize * 0.75 + "px";
+            badge.style.backgroundColor = surfaceColor;
+            badge.style.color = textColor;
+            badge.style.borderColor = secondaryColor;
+          });
+        }
+      }
+
+      async function initElementSdk() {
+        if (!window.elementSdk) return;
+
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            applyConfigToUI(config);
+          },
+          mapToCapabilities: (config) => {
+            const cfg = config || defaultConfig;
+            return {
+              recolorables: [
+                {
+                  get: () =>
+                    cfg.background_color || defaultConfig.background_color,
+                  set: (value) => {
+                    window.elementSdk.setConfig({ background_color: value });
+                  },
+                },
+                {
+                  get: () => cfg.surface_color || defaultConfig.surface_color,
+                  set: (value) => {
+                    window.elementSdk.setConfig({ surface_color: value });
+                  },
+                },
+                {
+                  get: () => cfg.text_color || defaultConfig.text_color,
+                  set: (value) => {
+                    window.elementSdk.setConfig({ text_color: value });
+                  },
+                },
+                {
+                  get: () =>
+                    cfg.primary_action_color ||
+                    defaultConfig.primary_action_color,
+                  set: (value) => {
+                    window.elementSdk.setConfig({
+                      primary_action_color: value,
+                    });
+                  },
+                },
+                {
+                  get: () =>
+                    cfg.secondary_action_color ||
+                    defaultConfig.secondary_action_color,
+                  set: (value) => {
+                    window.elementSdk.setConfig({
+                      secondary_action_color: value,
+                    });
+                  },
+                },
+              ],
+              borderables: [],
+              fontEditable: {
+                get: () => config.font_family || defaultConfig.font_family,
+                set: (value) => {
+                  window.elementSdk.setConfig({ font_family: value });
+                },
+              },
+              fontSizeable: {
+                get: () => config.font_size || defaultConfig.font_size,
+                set: (value) => {
+                  window.elementSdk.setConfig({ font_size: value });
+                },
+              },
+            };
+          },
+          mapToEditPanelValues: (config) => {
+            const cfg = { ...defaultConfig, ...config };
+            return new Map([
+              ["hero_title", cfg.hero_title],
+              ["hero_subtitle", cfg.hero_subtitle],
+              ["hero_cta_text", cfg.hero_cta_text],
+              ["features_title", cfg.features_title],
+              ["footer_text", cfg.footer_text],
+            ]);
+          },
+        });
+
+        // Aplicar config inicial
+        applyConfigToUI(window.elementSdk.config || defaultConfig);
+      }
+
+      // Iniciar SDK en cuanto esté disponible
+      (function waitForElementSdk() {
+        if (window.elementSdk) {
+          initElementSdk();
+        } else {
+          setTimeout(waitForElementSdk, 50);
+        }
+      })();
+    </script>
+    <style>
+      @view-transition {
+        navigation: auto;
+      }
+    </style>
+  </head>
+  <body class="h-full w-full m-0 p-0">
+    <div
+      id="page-wrapper"
+      class="app-wrapper w-full min-h-full flex flex-col"
+      style="background-color: #0f172a"
+    >
+      <header id="nav-bar" class="w-full">
+        <nav
+          class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between"
+        >
+          <div class="flex items-center gap-2">
+            <span
+              id="nav-brand"
+              class="text-slate-100 font-semibold tracking-wide text-sm sm:text-base"
+            >
+              Calcetines Vivos
+            </span>
+          </div>
+          <div class="flex items-center gap-2 sm:gap-4">
+            <a
+              href="#beneficios"
+              class="btn-secondary hidden sm:inline-block text-sm font-medium border rounded-full px-3 py-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 focus:ring-offset-slate-900"
+            >
+              Beneficios
+            </a>
+            <button
+              id="nav-cta"
+              class="btn-primary text-xs sm:text-sm font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg shadow-pink-900/40 transition-transform transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 focus:ring-offset-slate-900"
+            >
+              Comprar ahora
+            </button>
+            <button
+              id="menu-btn"
+              class="sm:hidden w-8 h-8 flex items-center justify-center text-slate-100 focus:outline-none focus:ring-2 focus:ring-pink-500 rounded"
+              aria-label="Abrir menú"
+            >
+              <svg
+                id="menu-icon"
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+              <svg
+                id="close-icon"
+                class="w-6 h-6 hidden"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </nav>
+        <!-- Mobile menu -->
+        <div
+          id="mobile-menu"
+          class="hidden sm:hidden border-t border-slate-700/60"
+        >
+          <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col gap-3">
+            <a
+              href="#beneficios"
+              class="btn-secondary text-sm font-medium border rounded-lg px-4 py-2 text-center transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 focus:ring-offset-slate-900"
+            >
+              Beneficios
+            </a>
+            <a
+              href="tel:5610677516"
+              class="text-sm text-slate-300 px-4 py-2 flex items-center gap-2 hover:text-emerald-400 transition-colors"
+            >
+              <span>📞</span> <span>56 1067 7516</span>
+            </a>
+            <a
+              href="mailto:hola@calcetinesvivos.com"
+              class="text-sm text-slate-300 px-4 py-2 flex items-center gap-2 hover:text-emerald-400 transition-colors"
+            >
+              <span>📧</span> <span>hola@calcetinesvivos.com</span>
+            </a>
+          </div>
+        </div>
+      </header>
+      <main class="flex-1 w-full">
+        <!-- Hero -->
+        <section class="w-full">
+          <div
+            class="max-w-5xl mx-auto px-6 pt-8 pb-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center"
+          >
+            <div class="space-y-6">
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-medium uppercase tracking-wide badge"
+              >
+                <span>Nuevo</span>
+                <span class="w-1 h-1 rounded-full bg-emerald-400"></span>
+                <span>Pack arcoíris 2025</span>
+              </div>
+              <h1 id="hero-title" class="text-slate-50 font-bold leading-tight">
+                <!-- texto se rellena vía JS -->
+              </h1>
+              <p id="hero-subtitle" class="text-slate-200/80 max-w-lg">
+                <!-- texto se rellena vía JS -->
+              </p>
+              <div class="flex flex-wrap items-center gap-4">
+                <button
+                  id="hero-cta"
+                  class="btn-primary inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold shadow-lg shadow-pink-900/40 transition-transform transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 focus:ring-offset-slate-900"
+                >
+                  <!-- texto se rellena vía JS -->
+                </button>
+                <button
+                  class="btn-secondary text-sm font-medium border rounded-full px-4 py-2 inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 focus:ring-offset-slate-900"
+                >
+                  Ver colores disponibles <span aria-hidden="true">→</span>
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-4 text-xs text-slate-200/80">
+                <div class="flex items-center gap-2">
+                  <span
+                    class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500 text-slate-900 font-bold text-[10px]"
+                    >✓</span
+                  >
+                  <span>Envío gratis desde 3 pares</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span
+                    class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500 text-slate-900 font-bold text-[10px]"
+                    >✓</span
+                  >
+                  <span>Algodón suave y transpirable</span>
+                </div>
+              </div>
+            </div>
+            <!-- Ilustración de calcetines con emojis -->
+            <div class="relative w-full h-full flex justify-center">
+              <div
+                class="relative w-full max-w-xs aspect-[3/4] rounded-3xl bg-slate-900/40 border border-slate-700/60 shadow-2xl shadow-pink-900/40 p-6 flex flex-col justify-between"
+              >
+                <div
+                  class="flex items-center justify-between text-xs text-slate-200/80 mb-4"
+                >
+                  <span
+                    class="px-2 py-1 rounded-full border border-emerald-400/60"
+                    >Pack colores vivos</span
+                  >
+                  <span class="px-2 py-1 rounded-full border border-pink-400/60"
+                    >Top ventas</span
+                  >
+                </div>
+                <div class="flex-1 flex items-center justify-center">
+                  <div class="grid grid-cols-2 gap-6 text-7xl">
+                    <div class="flex flex-col gap-4">
+                      <span>🧦</span> <span>🧦</span>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                      <span>🧦</span> <span>🧦</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4 space-y-2 text-xs text-slate-100">
+                  <div class="flex items-center justify-between">
+                    <span>Pack 4 pares</span>
+                    <span class="font-semibold">19,90 €</span>
+                  </div>
+                  <div
+                    class="flex items-center justify-between text-[11px] text-slate-300"
+                  >
+                    <span>Disponible en 8 combinaciones de color</span>
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-3 h-3 rounded-full bg-[#22c55e]"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#e11d48]"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#38bdf8]"></span>
+                      <span class="w-3 h-3 rounded-full bg-[#facc15]"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Beneficios -->
+        <section id="beneficios" class="w-full">
+          <div class="max-w-5xl mx-auto px-6 pb-10">
+            <div
+              class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6"
+            >
+              <div>
+                <h2 id="features-title" class="text-slate-50 font-semibold">
+                  <!-- texto se rellena vía JS -->
+                </h2>
+                <p class="text-sm text-slate-300 mt-1 max-w-md">
+                  Diseñados para durar, pensados para que tus pies estén cómodos
+                  todo el día, sin renunciar al estilo.
+                </p>
+              </div>
+              <div class="flex gap-3 text-xs text-slate-200/80">
+                <div class="flex flex-col">
+                  <span class="font-semibold text-slate-50">+5.000</span>
+                  <span>pares vendidos</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="font-semibold text-slate-50">4.9/5</span>
+                  <span>valoración media</span>
+                </div>
+              </div>
+            </div>
+            <div
+              id="cards-wrapper"
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              <!-- Card 1 -->
+              <article
+                class="sock-card rounded-2xl border border-slate-700/60 p-5 flex flex-col gap-3 focus-within:ring-2 focus-within:ring-pink-500 focus-within:ring-offset-2 focus-within:ring-offset-slate-900"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-slate-900 font-bold text-lg"
+                  >
+                    ☁
+                  </div>
+                  <h3 class="text-sm font-semibold text-slate-50">
+                    Comodidad absoluta
+                  </h3>
+                </div>
+                <p class="text-sm text-slate-200/80">
+                  Mezcla perfecta de algodón suave y fibras transpirables para
+                  que tus pies respiren, incluso en los días más largos.
+                </p>
+                <ul
+                  class="text-xs text-slate-300 list-disc list-inside space-y-1"
+                >
+                  <li>Costuras planas que no rozan</li>
+                  <li>Elástico suave que no aprieta</li>
+                </ul>
+              </article>
+              <!-- Card 2 -->
+              <article
+                class="sock-card rounded-2xl border border-slate-700/60 p-5 flex flex-col gap-3"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-pink-500 flex items-center justify-center text-slate-900 font-bold text-lg"
+                  >
+                    ✨
+                  </div>
+                  <h3 class="text-sm font-semibold text-slate-50">
+                    Colores que no se apagan
+                  </h3>
+                </div>
+                <p class="text-sm text-slate-200/80">
+                  Tinturas de alta calidad para que los colores sigan igual de
+                  vivos lavado tras lavado.
+                </p>
+                <ul
+                  class="text-xs text-slate-300 list-disc list-inside space-y-1"
+                >
+                  <li>Resistentes al lavado frecuente</li>
+                  <li>Sin pelusas ni bolas</li>
+                </ul>
+              </article>
+              <!-- Card 3 -->
+              <article
+                class="sock-card rounded-2xl border border-slate-700/60 p-5 flex flex-col gap-3"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-sky-400 flex items-center justify-center text-slate-900 font-bold text-lg"
+                  >
+                    🌈
+                  </div>
+                  <h3 class="text-sm font-semibold text-slate-50">
+                    Tu estilo, tus combinaciones
+                  </h3>
+                </div>
+                <p class="text-sm text-slate-200/80">
+                  Packs pensados para combinar con tu ropa, tus zapatillas y tu
+                  estado de ánimo.
+                </p>
+                <ul
+                  class="text-xs text-slate-300 list-disc list-inside space-y-1"
+                >
+                  <li>Packs monocromáticos o arcoíris</li>
+                  <li>Opciones casual, sport y oficina</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </section>
+        <!-- Bloque de "pedido demo" (formulario de ejemplo, no real) -->
+        <section class="w-full pb-10">
+          <div class="max-w-5xl mx-auto px-6">
+            <div
+              id="mock-form"
+              class="rounded-2xl border border-slate-700/60 p-6 md:p-7 flex flex-col md:flex-row gap-6 items-center"
+            >
+              <div class="flex-1 space-y-2">
+                <h3 id="mock-form-title" class="text-slate-50 font-semibold">
+                  Elige tu primer pack y comprueba la diferencia
+                </h3>
+                <p class="text-sm text-slate-200/80">
+                  Esta sección es un ejemplo visual de cómo sería un formulario
+                  de compra. En tu web real podrás conectar tu propio sistema de
+                  pago.
+                </p>
+                <div
+                  class="flex flex-wrap gap-2 text-[11px] text-slate-300 mt-2"
+                >
+                  <span
+                    class="px-2 py-1 rounded-full border border-emerald-400/60"
+                    >Satisfecho o reembolso 30 días</span
+                  >
+                  <span
+                    class="px-2 py-1 rounded-full border border-emerald-400/60"
+                    >Fabricado en la UE</span
+                  >
+                </div>
+              </div>
+              <form
+                class="w-full md:w-72 space-y-3"
+                aria-label="Formulario demostración"
+                onsubmit="event.preventDefault();"
+              >
+                <div>
+                  <label for="nombre" class="block text-xs text-slate-200 mb-1"
+                    >Nombre</label
+                  >
+                  <input
+                    id="nombre"
+                    type="text"
+                    class="w-full rounded-lg border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-slate-50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                    placeholder="Escribe tu nombre"
+                  />
+                </div>
+                <div>
+                  <label for="email" class="block text-xs text-slate-200 mb-1"
+                    >Correo electrónico</label
+                  >
+                  <input
+                    id="email"
+                    type="email"
+                    class="w-full rounded-lg border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-slate-50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                    placeholder="tucorreo@ejemplo.com"
+                  />
+                </div>
+                <div>
+                  <label for="pack" class="block text-xs text-slate-200 mb-1"
+                    >Elige tu pack</label
+                  >
+                  <select
+                    id="pack"
+                    class="w-full rounded-lg border border-slate-600 bg-slate-900/60 px-3 py-2 text-sm text-slate-50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                  >
+                    <option>Pack Arcoíris (4 pares)</option>
+                    <option>Pack Tonos Pastel (4 pares)</option>
+                    <option>Pack Oficina Elegante (3 pares)</option>
+                  </select>
+                </div>
+                <button
+                  id="mock-form-cta"
+                  type="submit"
+                  class="btn-primary w-full mt-2 rounded-lg py-2.5 text-sm font-semibold shadow-lg shadow-pink-900/40 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 focus:ring-offset-slate-900"
+                >
+                  Simular pedido
+                </button>
+                <p id="demo-note" class="text-[11px] text-slate-400">
+                  Demo: este formulario es solo ilustrativo, no realiza compras
+                  reales.
+                </p>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="w-full border-t border-slate-800/80">
+        <div class="max-w-5xl mx-auto px-6 py-6 space-y-4">
+          <div
+            class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-300"
+          >
+            <!-- Contacto -->
+            <div class="space-y-2">
+              <h4 class="font-semibold text-slate-100 text-sm mb-3">
+                📧 Contacto
+              </h4>
+              <div class="flex items-start gap-2">
+                <span class="text-slate-400">Email:</span>
+                <a
+                  href="mailto:hola@calcetinesvivos.com"
+                  class="text-emerald-400 hover:text-emerald-300 transition-colors"
+                  >hola@calcetinesvivos.com</a
+                >
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-slate-400">Tel:</span>
+                <a
+                  href="tel:5610677516"
+                  class="text-emerald-400 hover:text-emerald-300 transition-colors"
+                  >56 1067 7516</a
+                >
+              </div>
+            </div>
+            <!-- Dirección -->
+            <div class="space-y-2">
+              <h4 class="font-semibold text-slate-100 text-sm mb-3">
+                📍 Dirección
+              </h4>
+              <p class="text-slate-300 leading-relaxed">
+                Toltecas 166<br />
+                San Pedro de los Pinos<br />
+                01180 CDMX
+              </p>
+            </div>
+            <!-- Servicio -->
+            <div class="space-y-2">
+              <h4 class="font-semibold text-slate-100 text-sm mb-3">
+                �� Servicio
+              </h4>
+              <div class="flex items-center gap-2">
+                <span
+                  class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500 text-slate-900 font-bold text-[10px]"
+                  >✓</span
+                >
+                <span class="text-slate-300">Entrega a domicilio</span>
+              </div>
+              <p class="text-slate-400 text-[11px] mt-2">
+                Envío gratis en CDMX desde 3 pares
+              </p>
+            </div>
+          </div>
+          <div
+            class="border-t border-slate-800/80 pt-4 flex flex-col md:flex-row items-center justify-between gap-2"
+          >
+            <p id="footer-text" class="text-xs text-slate-400">
+              <!-- texto se rellena vía JS -->
+            </p>
+            <div class="flex gap-4 text-[11px] text-slate-400">
+              <span>Política de envíos</span>
+              <span>Política de devoluciones</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script>
+      // Capturar referencias y aplicar configuración inicial sin depender solo del SDK
+      document.addEventListener("DOMContentLoaded", function () {
+        pageWrapper = document.getElementById("page-wrapper");
+        heroTitleEl = document.getElementById("hero-title");
+        heroSubtitleEl = document.getElementById("hero-subtitle");
+        heroCtaBtn = document.getElementById("hero-cta");
+        featuresTitleEl = document.getElementById("features-title");
+        footerTextEl = document.getElementById("footer-text");
+        cardsWrapper = document.getElementById("cards-wrapper");
+        mockFormTitleEl = document.getElementById("mock-form-title");
+        mockFormCtaEl = document.getElementById("mock-form-cta");
+        navBrandEl = document.getElementById("nav-brand");
+        navCtaEl = document.getElementById("nav-cta");
+        badgesEls = document.querySelectorAll(".badge");
+
+        // Aplicar colores y textos por defecto en caso de que el SDK tarde o no esté
+        applyConfigToUI(defaultConfig);
+
+        // Scroll suave al hacer clic en CTA nav / hero
+        function scrollToMockForm() {
+          const section = document.getElementById("mock-form");
+          if (!section) return;
+          section.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        if (navCtaEl) {
+          navCtaEl.addEventListener("click", function (e) {
+            e.preventDefault();
+            scrollToMockForm();
+          });
+        }
+        if (heroCtaBtn) {
+          heroCtaBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            scrollToMockForm();
+          });
+        }
+
+        // Menu móvil toggle
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+        const menuIcon = document.getElementById("menu-icon");
+        const closeIcon = document.getElementById("close-icon");
+
+        if (menuBtn && mobileMenu) {
+          menuBtn.addEventListener("click", function () {
+            const isHidden = mobileMenu.classList.contains("hidden");
+            if (isHidden) {
+              mobileMenu.classList.remove("hidden");
+              menuIcon.classList.add("hidden");
+              closeIcon.classList.remove("hidden");
+            } else {
+              mobileMenu.classList.add("hidden");
+              menuIcon.classList.remove("hidden");
+              closeIcon.classList.add("hidden");
+            }
+          });
+
+          // Cerrar menú al hacer clic en un enlace
+          const mobileLinks = mobileMenu.querySelectorAll("a");
+          mobileLinks.forEach((link) => {
+            link.addEventListener("click", function () {
+              mobileMenu.classList.add("hidden");
+              menuIcon.classList.remove("hidden");
+              closeIcon.classList.add("hidden");
+            });
+          });
+        }
+      });
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'9ad44c12c1ca1e33',t:'MTc2NTYxNjY5OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>
