@@ -59,7 +59,8 @@
           "Colores vibrantes, comodidad extrema y estilo único. Descubre la revolución de los calcetines.",
         hero_cta_text: "¡Quiero mis calcetines ahora!",
         features_title: "✨ ¿Por qué elegir Calcetines Vivos?",
-        footer_text: "© 2025 Calcetines Vivos - Hecho con amor en CDMX",
+        footer_text:
+          "© 2025 Calcetines Vivos - Hecho con amor por Clancy Pink Punk Desing",
       };
 
       let refs = {};
@@ -278,7 +279,7 @@
               <button
                 class="btn-primary px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 rounded-full font-black text-xs sm:text-sm lg:text-base shadow-2xl transform hover:scale-105 transition-transform"
               >
-                ¡Comprar ahora!
+                Comprar ahora
               </button>
               <button
                 id="mobile-menu-btn"
@@ -304,16 +305,22 @@
           <!-- Menú móvil -->
           <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-3 pb-2">
             <a
-              href="tel:5610677516"
+              href="#about"
               class="flex items-center gap-3 text-white font-bold text-base bg-white/20 backdrop-blur-sm px-4 py-3 rounded-xl"
             >
-              <span>Teléfono: 56 1067 7516</span>
+              <span>Quiénes Somos</span>
             </a>
             <a
-              href="mailto:hola@calcetinesvivos.com"
+              href="#gallery"
               class="flex items-center gap-3 text-white font-bold text-base bg-white/20 backdrop-blur-sm px-4 py-3 rounded-xl"
             >
-              <span>hola@calcetinesvivos.com</span>
+              <span>Galería</span>
+            </a>
+            <a
+              href="#features"
+              class="flex items-center gap-3 text-white font-bold text-base bg-white/20 backdrop-blur-sm px-4 py-3 rounded-xl"
+            >
+              <span>Beneficios</span>
             </a>
           </div>
         </nav>
@@ -362,7 +369,7 @@
                   <button
                     class="btn-secondary px-8 py-4 rounded-full font-black text-lg shadow-2xl transform hover:scale-110 transition-all"
                   >
-                    Ver Galería
+                    Ver Galería 📸
                   </button>
                 </div>
                 <div
@@ -470,6 +477,52 @@
             </div>
           </div>
         </section>
+        <!-- Quiénes Somos -->
+        <section id="about" class="w-full py-12 sm:py-16 lg:py-20">
+          <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div
+              class="bg-white/20 backdrop-blur-lg rounded-3xl border-4 border-white/40 p-8 sm:p-12 shadow-2xl"
+            >
+              <h2
+                class="text-white font-black text-3xl sm:text-4xl lg:text-5xl mb-6 text-center drop-shadow-2xl"
+              >
+                🧦 ¿Quiénes Somos?
+              </h2>
+              <div
+                class="space-y-6 text-white/95 text-lg sm:text-xl leading-relaxed font-semibold"
+              >
+                <p>
+                  En
+                  <strong class="text-white">Calcetines Vivos</strong> creemos
+                  que la vida es demasiado corta para usar calcetines aburridos.
+                  Desde nuestra base en la Ciudad de México, diseñamos y creamos
+                  calcetines que son mucho más que una prenda básica.
+                </p>
+                <p>
+                  Cada par es una explosión de
+                  <strong class="text-white"
+                    >color, personalidad y comodidad</strong
+                  >. Utilizamos materiales premium y tintes de la más alta
+                  calidad para garantizar que tus calcetines se mantengan
+                  vibrantes, suaves y cómodos, lavado tras lavado.
+                </p>
+                <p>
+                  Nuestra misión es simple:
+                  <strong class="text-white"
+                    >llenar de vida cada paso que das</strong
+                  >. Ya sea que estés en la oficina, en una reunión importante,
+                  o simplemente relajándote en casa, nuestros calcetines te
+                  recuerdan que siempre hay espacio para un toque de alegría.
+                </p>
+                <div class="text-center pt-4">
+                  <p class="text-2xl font-black text-white">
+                    ✨ ¡Dale vida a tus pies! ✨
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
         <!-- Galería de Fotos -->
         <section
           id="gallery"
@@ -480,7 +533,7 @@
               <h2
                 class="text-white font-black text-3xl sm:text-4xl lg:text-5xl mb-4 drop-shadow-2xl"
               >
-                Nuestros Diseños Increíbles
+                🎨 Nuestros Diseños Increíbles
               </h2>
               <p class="text-white/90 text-lg sm:text-xl font-semibold">
                 Cada par es una obra de arte para tus pies
@@ -569,7 +622,7 @@
           </div>
         </section>
         <!-- Beneficios -->
-        <section class="w-full py-12 sm:py-16 lg:py-20">
+        <section id="features" class="w-full py-12 sm:py-16 lg:py-20">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2
               id="features-title"
@@ -688,7 +741,7 @@
               <h4 class="text-white font-black text-xl mb-4">Dirección</h4>
               <p class="text-white/90 font-semibold leading-relaxed">
                 Toltecas 166<br />
-                San Pedro de los Pinos<br />
+                San Pedro de los Pinos, 01180 <br />
                 01180 CDMX
               </p>
             </div>
@@ -900,6 +953,14 @@
           mobileMenuBtn.addEventListener("click", function () {
             mobileMenu.classList.toggle("hidden");
           });
+
+          // Cerrar menú móvil al hacer clic en un enlace
+          const mobileLinks = mobileMenu.querySelectorAll("a");
+          mobileLinks.forEach((link) => {
+            link.addEventListener("click", function () {
+              mobileMenu.classList.add("hidden");
+            });
+          });
         }
 
         // Scroll suave a galería
@@ -1072,7 +1133,7 @@
           if (b) {
             var d = b.createElement("script");
             d.innerHTML =
-              "window.__CF$cv$params={r:'9b1603dd14fceef2',t:'MTc2NjMwNTgwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+              "window.__CF$cv$params={r:'9b1afe0a376beef2',t:'MTc2NjM1Nzk5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
             b.getElementsByTagName("head")[0].appendChild(d);
           }
         }
